@@ -1,5 +1,12 @@
 # weeek5
+
 # Managing Dependencies with rosdep
+## What is rosdep?
+*`rosdep` is ROS’s dependency management utility that can work with ROS packages and external libraries. rosdep is a command-line utility for identifying and installing dependencies to build or install a package.*
+
+## How does rosdep work?
+*`rosdep` will check for package.xml files in its path or for a specific package and find the rosdep keys stored within. Once the packages are found, they are installed and ready to go!*
+
 ## How do I use the rosdep tool?
 We are prepared to use the utility now that we have a basic understanding of rosdep, package.xml, and rosdistro. First, if using rosdep for the first time, it must be initialized using:
 
@@ -7,12 +14,18 @@ We are prepared to use the utility now that we have a basic understanding of ros
 sudo rosdep init
 rosdep update
 ```
+<img width="433" alt="Screenshot_2" src="https://user-images.githubusercontent.com/92029196/196000334-0bc9adc8-17be-4e8f-83ca-9c825b9c048b.png">
+
+
+
 We can finally use rosdep install to install dependencies. This is often called once across a workspace that contains numerous packages in order to install all dependencies. If the workspace's root contained the source-code-containing directory src, a call for that might look like the following.
 
 
 ```
 rosdep install --from-paths src -y --ignore-src
 ```
+<img width="333" alt="Screenshot_1" src="https://user-images.githubusercontent.com/92029196/196000309-4dd4c008-b3cf-440f-b664-3770d415f871.png">
+
 # Creating an action
 ## Prerequisites
 
@@ -26,6 +39,8 @@ mkdir -p ros2_ws/src #you can reuse existing workspace with this naming conventi
 cd ros2_ws/src
 ros2 pkg create action_tutorials_interfaces
 ```
+<img width="403" alt="Screenshot_3" src="https://user-images.githubusercontent.com/92029196/196000477-817e96db-0c2c-4fa3-9c57-40a7d8aef42e.png">
+
 # Tasks
 ## 1. Defining an action
 Actions are described in .action files with the following format:
@@ -42,6 +57,9 @@ Create a directory called "action" in our ROS 2 package called "action tutorials
 cd action_tutorials_interfaces
 mkdir action
 ```
+<img width="374" alt="Screenshot_4" src="https://user-images.githubusercontent.com/92029196/196000505-d1d6a558-05e6-4bfe-bbbb-32ac95f6a590.png">
+
+
 Make a file called Fibonacci in the action directory. action that includes the following information:
 ```
 int32 order
@@ -61,6 +79,9 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "action/Fibonacci.action"
 )
 ```
+<img width="441" alt="Screenshot_5" src="https://user-images.githubusercontent.com/92029196/196000566-ee571b72-e5cc-45d9-a71f-a509d194d98a.png">
+
+
 We must also include the necessary dependencies in our package.xml file:
 ```
 <buildtool_depend>rosidl_default_generators</buildtool_depend>
@@ -78,6 +99,9 @@ cd ~/ros2_ws
 # Build
 colcon build
 ```
+<img width="434" alt="Screenshot_6" src="https://user-images.githubusercontent.com/92029196/196000590-acd154ef-ebad-4b20-959d-f205f8f66c21.png">
+
+
 We are done!
 
 Action types will often start with the term "action" and the package name. As a result, our new action will be referred to by its complete name, action tutorials interfaces/action/Fibonacci.
@@ -90,6 +114,8 @@ Using the command line tool, we can verify that our action was built successfull
 # Check that our action definition exists
 ros2 interface show action_tutorials_interfaces/action/Fibonacci
 ```
+<img width="435" alt="Screenshot_7" src="https://user-images.githubusercontent.com/92029196/196000613-23067963-4946-4b9c-a80c-acd61260f345.png">
+
 The definition of the Fibonacci action should appear on the screen.
 
 # Writing an action server and client
@@ -139,11 +165,15 @@ Let's attempt to run our action server:
 ```
 python3 fibonacci_action_server.py
 ```
+<img width="444" alt="Screenshot_8" src="https://user-images.githubusercontent.com/92029196/196000652-45e82e7d-d4c5-4526-a7f5-c21223887a47.png">
+
 We can communicate a goal via the command line interface to another terminal:
 
 ```
 ros2 action send_goal fibonacci action_tutorials_interfaces/action/Fibonacci "{order: 5}"
 ```
+<img width="445" alt="Screenshot_9" src="https://user-images.githubusercontent.com/92029196/196000672-7b223c10-bb37-42ab-af48-48e2d58d92d9.png">
+
 You should see the logged message "Executing goal..." followed by a notice that the goal state was not established in the terminal that is running the action server. The aborted state is assumed by default if the goal handle state is not set in the execute callback.
 
 The succeed() method on the goal handle can be used to show that the goal was successful:
@@ -159,6 +189,11 @@ The succeed() method on the goal handle can be used to show that the goal was su
 ```
 You should see the goal completed with the status SUCCEED if you restart the action server and send another goal at this point.
 
+<img width="368" alt="Screenshot_10" src="https://user-images.githubusercontent.com/92029196/196000707-e2b4f46e-e81a-4bc6-afb8-f527ad096ea7.png">
+
+<img width="368" alt="Screenshot_11" src="https://user-images.githubusercontent.com/92029196/196000714-18f9cf02-7541-4a7f-ac60-807818828441.png">
+<img width="363" alt="Screenshot_12" src="https://user-images.githubusercontent.com/92029196/196000726-deac91e0-5829-4dde-b42c-fc9de674ce64.png">
+<img width="357" alt="Screenshot_13" src="https://user-images.githubusercontent.com/92029196/196000740-ad7a7fa4-9e4f-4ab7-aeb8-8352975ac969.png">
 
 
 Let's now make sure that our target execution computes and returns the specified Fibonacci sequence:
@@ -258,6 +293,10 @@ Utilizing the command line tool with the --feedback option after restarting the 
 ```
 ros2 action send_goal --feedback fibonacci action_tutorials_interfaces/action/Fibonacci "{order: 5}"
 ```
+<img width="453" alt="Screenshot_14" src="https://user-images.githubusercontent.com/92029196/196000762-d837c8dc-5d12-459a-8ea4-ae81db728015.png">
+<img width="530" alt="Screenshot_15" src="https://user-images.githubusercontent.com/92029196/196000777-e12bebd4-5b73-4560-a1ef-070d334af3ce.png">
+
+
 ## 2. Writing an action client
 We'll limit the action client to just one file as well. Then, open a new file and name it fibonacci action client.py. Add the following boilerplate code to the new file:
 
@@ -316,7 +355,10 @@ As the action server completes the goal, the following messages should be printe
 [INFO] [fibonacci_action_server]: Feedback: array('i', [0, 1, 1, 2, 3, 5])
 # etc.
 ```
+<img width="370" alt="Screenshot_16" src="https://user-images.githubusercontent.com/92029196/196000797-4808a084-b28e-4851-9c4e-8178b55d8e0e.png">
+
 The action client should begin and complete as soon as possible. We currently have a working action client, but we receive no feedback or results.
+
 
 ## 2.1 Getting a result
 We must first obtain a goal handle for the goal that we sent. The result can then be requested using the goal handle.
@@ -384,6 +426,9 @@ Go ahead and attempt to run our Fibonacci action client while an action server i
 ```
 python3 fibonacci_action_client.py
 ```
+<img width="364" alt="Screenshot_17" src="https://user-images.githubusercontent.com/92029196/196000831-9211e39e-7966-43d6-a60e-02d6adbf72be.png">
+<img width="368" alt="Screenshot_18" src="https://user-images.githubusercontent.com/92029196/196000853-5c7b6f48-e44b-4082-9ef4-505b10cef69b.png">
+
 You should be able to see the goal being accepted and the outcome in the logs.
 
 ## 2.2 Getting feedback
@@ -454,6 +499,8 @@ Everything is ready for us. Your screen should display feedback if we run our ac
 python3 fibonacci_action_client.py
 ```
 
+<img width="363" alt="Screenshot_20" src="https://user-images.githubusercontent.com/92029196/196000882-9c370b6f-4509-4e6d-903a-f53b83c22482.png">
+<img width="364" alt="Screenshot_19" src="https://user-images.githubusercontent.com/92029196/196000885-49bd3ed8-7e38-4e0e-a091-290e240fe5f4.png">
 
 
 
